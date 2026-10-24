@@ -1,0 +1,11 @@
+hakari-package = "my-workspace-hack"
+resolver = "2"                                 # Hakari uses v2 simulation logic (compatible with v3 workspaces)
+dep-format-version = "4"
+workspace-hack-line-style = "workspace-dotted"
+
+# Target triples your Nix flake builds on
+platforms = [
+  "aarch64-apple-darwin",
+  "x86_64-unknown-linux-gnu",
+  "aarch64-unknown-linux-gnu",
+]
