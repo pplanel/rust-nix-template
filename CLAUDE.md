@@ -33,8 +33,17 @@ feature flags across the workspace so deps build once. Every member depends on i
 The toolchain and dev tools come from the Nix flake, loaded automatically by
 `direnv` (`.envrc` → `use flake`). Inside the shell you get the pinned Rust
 toolchain plus `cargo-nextest`, `cargo-hakari`, `cargo-release`, `cargo-edit`,
-`cargo-watch`, `git-cliff`, `cocogitto`. The flake uses **crane**; builds are
-named via `[workspace.metadata.crane] name` in the root `Cargo.toml`.
+`cargo-watch`, `git-cliff`, `cocogitto`, `just`. The flake uses **crane**; builds
+are named via `[workspace.metadata.crane] name` in the root `Cargo.toml`.
+
+A root `Justfile` wraps the common workflows (`just` lists them), separating the
+fast inner loop from hermetic verification:
+
+- `just check` — fast local gate: fmt-check, clippy, nextest, hakari-verify (no Nix sandbox).
+- `just check-nix` / `just build-nix` — `nix flake check` / `nix build`, hermetic, what CI mirrors.
+- `just bootstrap` — re-wire the workspace-hack after adding a crate or dependency.
+- `just watch` — clippy + tests on every change.
+- `just release` / `release-dry` / `changelog` — cocogitto + git-cliff (need `cog.toml`/`cliff.toml`, not shipped yet).
 
 `nix flake check` runs the whole gate (clippy, fmt, nextest, and the `server`
 build) hermetically — this is what CI should mirror.

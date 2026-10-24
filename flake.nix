@@ -141,6 +141,7 @@
 
           # rustToolchain is automatically included by craneLib.devShell
           packages = with pkgs; [
+            just
             cargo-edit
             cargo-watch
             cargo-nextest

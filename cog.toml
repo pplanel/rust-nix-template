@@ -1,0 +1,38 @@
+from_latest_tag = true
+ignore_merge_commits = true
+disable_changelog = true
+tag_prefix = "v"
+branch_whitelist = ["main"]
+
+# Format of the automated release commit created by `cog bump`
+pre_bump_hooks = [
+  # 1. Update [workspace.package].version, internal crate versions, and Cargo.lock
+  "cargo release version {{version}} --workspace --execute --no-confirm",
+  # 2. Keep workspace-hack synchronized after version updates
+  "cargo hakari generate",
+  # 3. Sync Cargo.lock
+  "cargo update --workspace",
+  # 4. Render CHANGELOG.md for the incoming tag via git-cliff
+  "git cliff --tag v{{version}} -o CHANGELOG.md",
+]
+
+post_bump_hooks = ["git push", "git push origin v{{version}}"]
+
+# Install locally via `cog install-hook --all`
+[git_hooks.commit-msg]
+script = """#!/usr/bin/env sh
+set -e
+cog verify --file "$1"
+"""
+
+[git_hooks.pre-push]
+script = """#!/usr/bin/env sh
+set -e
+cog check --from-latest-tag
+"""
+
+[commit_types]
+chore = { changelog_title = "Miscellaneous Tasks", omit_from_changelog = true }
+ci = { changelog_title = "CI/CD", omit_from_changelog = true }
+perf = { changelog_title = "Performance", bump_patch = true }
+refactor = { changelog_title = "Refactoring", bump_patch = false }
