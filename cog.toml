@@ -36,3 +36,4 @@ chore = { changelog_title = "Miscellaneous Tasks", omit_from_changelog = true }
 ci = { changelog_title = "CI/CD", omit_from_changelog = true }
 perf = { changelog_title = "Performance", bump_patch = true }
 refactor = { changelog_title = "Refactoring", bump_patch = false }
+init = { bump = false }

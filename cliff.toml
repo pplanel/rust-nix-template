@@ -1,4 +1,5 @@
 [changelog]
+{% raw %}
 header = """
 # Changelog\n
 All notable changes to this workspace will be documented in this file.\n
@@ -16,14 +17,15 @@ body = """
             {% if commit.breaking %}[**breaking**] {% endif %}\
             {{ commit.message | upper_first }} ([`{{ commit.id | truncate(length=7, end="") }}`]({{ self::remote_url() }}/commit/{{ commit.id }}))\
     {% endfor %}
-{% endfor %}\n
+\n
 """
 footer = ""
+{% endraw %}
 trim = true
 
 # Tera macro for commit links — update with your repository URL
 postprocessors = [
-  { pattern = '<REPO>', replace = "https://github.com/org/repo" },
+  { pattern = '<REPO>', replace = "https://github.com/{{github_name}}/{{project}}" },
 ]
 
 [git]
