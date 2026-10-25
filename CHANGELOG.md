@@ -8,6 +8,7 @@ All notable changes to this workspace will be documented in this file.
 
 - **(fmt)** Fixing failed ci ([`0870ce4`](https://github.com/org/repo/commit/0870ce4d9219e5259ecbfe8e0b0dff2063399008))
 - **(generate)** Fix cliff.toml ([`40046ab`](https://github.com/org/repo/commit/40046ab26810321c91fc865d69d0cac77809b0b0))
+- **(cliff)** Signing thinkgs ([`0e6ffe0`](https://github.com/org/repo/commit/0e6ffe0246e96180a184384c46863d377d90de8f))
 
 ## [0.1.2] - 2026-10-25
 
