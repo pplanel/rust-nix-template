@@ -1,5 +1,5 @@
 {
-  description = "";
+  description = "Modern multi-crate Rust workspace using Nix Flakes, Crane, and Rust-Overlay";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -21,7 +21,7 @@
     rust-overlay,
     crane,
   }:
-    flake-utils.lib.eachDefaultSystem (
+    (flake-utils.lib.eachDefaultSystem (
       system: let
         pkgs = import nixpkgs {
           inherit system;
@@ -29,7 +29,7 @@
         };
         inherit (pkgs) lib;
 
-        # 1. Toolchain definition (or use pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
+        # 1. Toolchain definition
         rustToolchain = pkgs.rust-bin.stable.latest.default.override {
           extensions = ["rust-src" "rust-analyzer" "clippy" "rustfmt"];
         };
@@ -48,7 +48,7 @@
             [
               # Add C/system libs here (e.g., openssl)
             ]
-            ++ lib.optionals stdenv.hostPlatform.isDarwin [
+            ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
               pkgs.libiconv
             ];
 
@@ -66,10 +66,10 @@
           // {
             inherit cargoArtifacts;
             inherit (craneLib.crateNameFromCargoToml {inherit src;}) version;
-            doCheck = false; # Tests are run once across the workspace in `checks`
+            doCheck = false; # Tests run across workspace in `checks`
           };
 
-        # Helper to isolate source trees per crate so changing crate A doesn't rebuild crate B
+        # Base shared sources: changes outside these won't trigger rebuilds for individual crates
         fileSetForCrate = crateFiles:
           lib.fileset.toSource {
             root = ./.;
@@ -78,8 +78,7 @@
                 ./Cargo.lock
                 (craneLib.fileset.commonCargoSources ./crates/common)
                 (craneLib.fileset.commonCargoSources ./crates/domain)
-                (craneLib.fileset.commonCargoSources ./crates/server)
-                (craneLib.fileset.commonCargoSources ./crates/my-workspace-hack) # Uncomment if using cargo-hakari
+                (craneLib.fileset.commonCargoSources ./crates/my-workspace-hack)
               ]
               ++ crateFiles);
           };
@@ -93,6 +92,29 @@
               (craneLib.fileset.commonCargoSources ./crates/server)
             ];
           });
+
+        # 6. Minimal OCI container image
+        server-container = pkgs.dockerTools.buildLayeredImage {
+          name = "server";
+          tag = server.version;
+          created = "now";
+
+          contents = [
+            pkgs.cacert
+            pkgs.tzdata
+            server
+          ];
+
+          config = {
+            Entrypoint = ["${lib.getExe server}"];
+            Env = [
+              "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              "TZDIR=${pkgs.tzdata}/share/zoneinfo"
+              "RUST_LOG=info"
+            ];
+            User = "65534:65534"; # nobody
+          };
+        };
       in {
         formatter = pkgs.nixfmt-rfc-style;
 
@@ -132,14 +154,13 @@
         };
 
         packages = {
-          inherit server;
+          inherit server server-container;
           default = server;
         };
 
         devShells.default = craneLib.devShell {
           checks = self.checks.${system};
 
-          # rustToolchain is automatically included by craneLib.devShell
           packages = with pkgs; [
             just
             cargo-edit
@@ -152,5 +173,17 @@
           ];
         };
       }
-    );
+    ))
+    // {
+      # Top-level (system-independent) output for `nix flake init -t`
+      templates.default = {
+        path = ./.;
+        description = "Multi-crate Rust workspace with Crane, cargo-hakari, Cocogitto, and git-cliff";
+        welcomeText = ''
+          # Rust Workspace Template Initialized
+          1. Run `direnv allow` (or `nix develop`) to enter the devShell.
+          2. Run `just init <project-name> <github-owner>` to configure workspace identifiers and hooks.
+        '';
+      };
+    };
 }
