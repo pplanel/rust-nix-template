@@ -162,6 +162,7 @@
           checks = self.checks.${system};
 
           packages = with pkgs; [
+            sd
             just
             cargo-edit
             cargo-watch

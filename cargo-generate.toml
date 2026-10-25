@@ -2,9 +2,17 @@
 [template]
 cargo_generate_version = ">=0.21.0"
 description = "Rust workspace boilerplate: crane flake, hakari, conventional releases."
-ignore = [".git", "target", "result", "CHANGELOG.md"]
+ignore = [".git", "target", "result", "CHANGELOG.md", "CONVENTIONS.md"]
 
-exclude = ["cog.toml", ".config/harari.toml"]
+exclude = [
+    "Cargo.toml",
+    "flake.nix",
+    "Justfile",
+    "cog.toml",
+    "cliff.toml",
+    ".config/hakari.toml",
+    ".github/workflows/ci.yml",
+]
 
 [hooks]
 post = ["post-generate.rhai"]

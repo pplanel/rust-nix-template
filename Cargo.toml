@@ -32,7 +32,7 @@ expect_used = "warn"
 # Shared config for cargo-release across the monorepo
 [workspace.metadata.release]
 shared-version = true
-{% raw %}tag-name = "v{{version}}"{% endraw %}
+tag-name = "v{{version}}"
 publish = false           # Flip to true in crates you distribute to crates.io
 
 [workspace.dependencies]

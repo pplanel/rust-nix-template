@@ -1,5 +1,4 @@
 [changelog]
-{% raw %}
 header = """
 # Changelog\n
 All notable changes to this workspace will be documented in this file.\n
@@ -20,7 +19,6 @@ body = """
 \n
 """
 footer = ""
-{% endraw %}
 trim = true
 
 # Tera macro for commit links — update with your repository URL

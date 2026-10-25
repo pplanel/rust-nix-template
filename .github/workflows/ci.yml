@@ -1,4 +1,3 @@
-{{% raw %}}
 name: CI & Release
 
 on:
@@ -104,7 +103,7 @@ jobs:
         run: |
           # Build the default package from the freshly bumped commit
           nix build .#default -L
-{{ endraw }}
+
           # Package the compiled binary into a release archive
           tar -czvf "my-cli-v${VERSION}-x86_64-unknown-linux-gnu.tar.gz" -C result/bin .
 
@@ -114,7 +113,5 @@ jobs:
           # Create the GitHub Release and attach the binary archive
           gh release create "v${VERSION}" \
             "my-cli-v${VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
-{{% raw %}}
             --title "v${VERSION}" \
             --notes-file RELEASE_NOTES.md
-{{% endraw %}}
