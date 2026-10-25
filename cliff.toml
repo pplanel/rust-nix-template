@@ -4,6 +4,9 @@ header = """
 All notable changes to this workspace will be documented in this file.\n
 """
 body = """
+{%- macro remote_url() -%}
+    https://github.com/org/repo
+{%- endmacro -%}
 {% if version %}\
     ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
 {% else %}\
@@ -16,14 +19,14 @@ body = """
             {% if commit.breaking %}[**breaking**] {% endif %}\
             {{ commit.message | upper_first }} ([`{{ commit.id | truncate(length=7, end="") }}`]({{ self::remote_url() }}/commit/{{ commit.id }}))\
     {% endfor %}
-\n
+{% endfor %}\n
 """
 footer = ""
 trim = true
 
 # Tera macro for commit links — update with your repository URL
 postprocessors = [
-  { pattern = '<REPO>', replace = "https://github.com/{{github_name}}/{{project}}" },
+  { pattern = '<REPO>', replace = "https://github.com/org/repo" },
 ]
 
 [git]
