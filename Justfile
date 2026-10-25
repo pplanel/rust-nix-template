@@ -81,12 +81,9 @@ changelog:
 
 # Bootstrap workspace identifiers, hooks, hakari, and v0.1.0 tag
 init project_name="my-cli" github_owner="my-org":
-    @if [ "{{ project_name }}" != "my-cli" ]; then \
-        mv crates/my-cli "crates/{{ project_name }}"; \
-        sd "my-org/my-repo" "{{ github_owner }}/{{ project_name }}" Cargo.toml cliff.toml flake.nix; \
-        sd "my-org" "{{ github_owner }}" flake.nix; \
-        sd "my-cli" "{{ project_name }}" Cargo.toml flake.nix .github/workflows/ci.yml; \
-    fi
+    sd "my-org/my-repo" "{{ github_owner }}/{{ project_name }}" Cargo.toml cliff.toml flake.nix; \
+    sd "my-org" "{{ github_owner }}" flake.nix; \
+    sd "my-cli" "{{ project_name }}" Cargo.toml flake.nix .github/workflows/ci.yml; \
     rm -f cargo-generate.toml post-generate.rhai
     cargo hakari generate
     cargo hakari manage-deps

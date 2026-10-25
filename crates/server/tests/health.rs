@@ -5,10 +5,10 @@ use tower::ServiceExt;
 
 #[tokio::test]
 async fn health_returns_ok() {
-    let response = server::app()
-        .oneshot(Request::get("/health").body(Body::empty()).unwrap())
-        .await
-        .unwrap();
+  let response = server::app()
+    .oneshot(Request::get("/health").body(Body::empty()).unwrap())
+    .await
+    .unwrap();
 
-    assert_eq!(response.status(), StatusCode::OK);
+  assert_eq!(response.status(), StatusCode::OK);
 }
