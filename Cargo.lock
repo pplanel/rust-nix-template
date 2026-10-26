@@ -80,14 +80,14 @@ checksum = "4e7648175b45a9a48536d676f68d918270699102aa8dab5496df06904c914600"
 
 [[package]]
 name = "common"
-version = "0.1.3"
+version = "0.1.4"
 dependencies = [
  "my-workspace-hack",
 ]
 
 [[package]]
 name = "domain"
-version = "0.1.3"
+version = "0.1.4"
 dependencies = [
  "common",
  "my-workspace-hack",
@@ -260,7 +260,7 @@ dependencies = [
 
 [[package]]
 name = "my-workspace-hack"
-version = "0.1.3"
+version = "0.1.4"
 
 [[package]]
 name = "nu-ansi-term"
@@ -380,7 +380,7 @@ dependencies = [
 
 [[package]]
 name = "server"
-version = "0.1.3"
+version = "0.1.4"
 dependencies = [
  "anyhow",
  "axum",

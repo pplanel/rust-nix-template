@@ -2,6 +2,12 @@
 
 All notable changes to this workspace will be documented in this file.
 
+## [0.1.4] - 2026-10-26
+
+### Bug Fixes
+
+- Justfile had wrong Cog order ([`9de782d`](https://github.com/org/repo/commit/9de782d42eefdc61af94ca750700da7deee6e8c5))
+
 ## [0.1.3] - 2026-10-25
 
 ### Bug Fixes

@@ -88,10 +88,10 @@ init project_name="my-cli" github_owner="my-org":
     cargo hakari generate
     cargo hakari manage-deps
     cargo generate-lockfile
-    cog install-hook --all
     @if ! git rev-parse v0.1.0 >/dev/null 2>&1; then \
         git init && \
         git add -A && \
         git commit -m "chore: initial workspace skeleton" && \
         git tag -a v0.1.0 -m "Initial release baseline"; \
     fi
+    cog install-hook --all
